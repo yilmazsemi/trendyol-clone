@@ -1,0 +1,64 @@
+/* src/components/SellerRegister.css */
+
+.seller-register-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .seller-register-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .seller-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .seller-form label {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #444;
+  }
+  
+  .seller-form input,
+  .seller-form textarea {
+    padding: 10px;
+    font-size: 14px;
+    margin-top: 4px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  .seller-form textarea {
+    min-height: 80px;
+    resize: none;
+  }
+  
+  .seller-form button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f27a1a;
+    color: white;
+    border: none;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .seller-form button:hover {
+    background-color: #d6670c;
+  }
+  
+  .seller-message {
+    margin-top: 16px;
+    font-size: 14px;
+    color: green;
+  }
+  

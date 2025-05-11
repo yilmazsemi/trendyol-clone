@@ -1,0 +1,85 @@
+.signup-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .signup-container h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
+    color: #333;
+    text-align: center;
+  }
+  
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .signup-form label {
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: #444;
+  }
+  
+  .signup-form input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 16px;
+  }
+  
+  .signup-form button {
+    padding: 12px;
+    background-color: #f27a1a;
+    color: white;
+    border: none;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background-color 0.3s;
+  }
+  
+  .signup-form button:hover {
+    background-color: #d6670c;
+  }
+  
+  .signup-message {
+    margin-top: 12px;
+    font-size: 14px;
+    color: green;
+    text-align: center;
+  }
+  
+  /* Seller Register Section */
+  .seller-register-link {
+    margin-top: 24px;
+    text-align: center;
+  }
+  
+  .seller-register-link p {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #555;
+  }
+  
+  .seller-register-link button {
+    font-size: 14px;
+    padding: 8px 14px;
+    border: none;
+    background-color: #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .seller-register-link button:hover {
+    background-color: #ccc;
+  }
+  
