@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
-import { db, auth } from '../services/firebase';
-import { collection, addDoc, Timestamp, doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../services/firebase';
+import {
+  createUserWithEmailAndPassword
+} from 'firebase/auth';
+import {
+  collection,
+  addDoc,
+  doc,
+  setDoc,
+  Timestamp
+} from 'firebase/firestore';
 import './SellerRegister.css';
 
 const SellerRegister = () => {
   const [companyName, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [description, setDescription] = useState('');
   const [message, setMessage] = useState('');
@@ -13,13 +23,17 @@ const SellerRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!companyName || !email || !phone || !description) {
-      setMessage('Lütfen tüm alanları doldurun.');
+    if (!companyName || !email || !password || !phone || !description) {
+      setMessage('❌ Lütfen tüm alanları doldurun.');
       return;
     }
 
     try {
-      // 1. Save application to seller_applications
+      // 1. Create user in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = userCredential.user.uid;
+
+      // 2. Save to seller_applications
       await addDoc(collection(db, 'seller_applications'), {
         companyName,
         email,
@@ -29,26 +43,25 @@ const SellerRegister = () => {
         createdAt: Timestamp.now()
       });
 
-      // 2. Set seller role in users collection
-      if (auth.currentUser) {
-        await setDoc(
-          doc(db, 'users', auth.currentUser.uid),
-          {
-            email: auth.currentUser.email,
-            role: 'seller'
-          },
-          { merge: true }
-        );
-      }
+      // 3. Set user role as 'seller'
+      await setDoc(
+        doc(db, 'users', uid),
+        {
+          email,
+          role: 'seller'
+        },
+        { merge: true }
+      );
 
-      setMessage('✔️ Başvurunuz alındı. Yönetici onayı bekleniyor.');
+      setMessage('✔️ Başvurunuz alındı ve hesabınız oluşturuldu!');
       setCompanyName('');
       setEmail('');
+      setPassword('');
       setPhone('');
       setDescription('');
     } catch (error) {
-      console.error('Başvuru hatası:', error);
-      setMessage('❌ Başvuru gönderilirken bir hata oluştu.');
+      console.error('Satıcı kayıt hatası:', error);
+      setMessage('❌ Hesap oluşturulamadı: ' + error.message);
     }
   };
 
@@ -68,6 +81,13 @@ const SellerRegister = () => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <label>Şifre</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         <label>Telefon</label>
