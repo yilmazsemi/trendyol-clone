@@ -1,27 +1,29 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/Navbar'; // ⬅️ Add this
-import SignUp from './components/SignUp';
-import Login from './components/Login';
-import Profile from './components/Profile';
-import Category from './components/Category';
-import Search from './components/Search';
-import ProductDetail from './components/ProductDetail';
-import Cart from './components/Cart';
-import Checkout from './components/Checkout';
-import SellerRegister from './components/SellerRegister';
-import SellerLogin from './components/SellerLogin';
-import SellerDashboard from './components/SellerDashboard';
-import AdminLogin from './components/AdminLogin';
-import AdminDashboard from './components/AdminDashboard';
-import Products from './components/Products'; 
-import Orders from './components/Orders'; 
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar"; // ⬅️ Add this
+import SignUp from "./components/SignUp";
+import Login from "./components/Login";
+import Profile from "./components/Profile";
+import Category from "./components/Category";
+import Search from "./components/Search";
+import ProductDetail from "./components/ProductDetail";
+import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
+import SellerRegister from "./components/SellerRegister";
+import SellerLogin from "./components/SellerLogin";
+import SellerDashboard from "./components/SellerDashboard";
+import AdminLogin from "./components/AdminLogin";
+import AdminDashboard from "./components/AdminDashboard";
+import Products from "./components/Products";
+import AddProduct from "./components/AddProduct";
+import Orders from "./components/Orders";
 
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
+        <Route path="/seller/add-product" element={<AddProduct />} />
         <Route path="/" element={<Navigate to="/products" />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />

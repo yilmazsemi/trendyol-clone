@@ -1,0 +1,46 @@
+.admin-dashboard-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .admin-dashboard-container h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  
+  th, td {
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #f6f6f6;
+    color: #444;
+  }
+  
+  button {
+    padding: 6px 12px;
+    background-color: #f27a1a;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #d6670c;
+  }
+  

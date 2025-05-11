@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { db } from '../services/firebase';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
+import { db, auth } from '../services/firebase';
+import { collection, addDoc, Timestamp, doc, setDoc } from 'firebase/firestore';
 import './SellerRegister.css';
 
 const SellerRegister = () => {
@@ -19,6 +19,7 @@ const SellerRegister = () => {
     }
 
     try {
+      // 1. Save application to seller_applications
       await addDoc(collection(db, 'seller_applications'), {
         companyName,
         email,
@@ -27,6 +28,19 @@ const SellerRegister = () => {
         status: 'pending',
         createdAt: Timestamp.now()
       });
+
+      // 2. Set seller role in users collection
+      if (auth.currentUser) {
+        await setDoc(
+          doc(db, 'users', auth.currentUser.uid),
+          {
+            email: auth.currentUser.email,
+            role: 'seller'
+          },
+          { merge: true }
+        );
+      }
+
       setMessage('✔️ Başvurunuz alındı. Yönetici onayı bekleniyor.');
       setCompanyName('');
       setEmail('');

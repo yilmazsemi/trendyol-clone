@@ -1,19 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../services/firebase';
+import { auth, db } from '../services/firebase';
 import { signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import './Navbar.css';
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [user, setUser] = useState(auth.currentUser);
+  const [userRole, setUserRole] = useState(null);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((u) => {
+    const unsubscribe = auth.onAuthStateChanged(async (u) => {
       setUser(u);
+      if (u) {
+        const ref = doc(db, 'users', u.uid);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          const data = snap.data();
+          setUserRole(data.role || null);
+        }
+      } else {
+        setUserRole(null);
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -75,6 +87,13 @@ const Navbar = () => {
                   <button onClick={() => navigate('/profile')}>Profile</button>
                   <button onClick={() => navigate('/orders')}>Orders</button>
                   <button onClick={() => navigate('/cart')}>Cart</button>
+
+                  {userRole === 'admin' && (
+                    <button onClick={() => navigate('/admin/dashboard')}>
+                      Admin Panel
+                    </button>
+                  )}
+
                   <button
                     onClick={async () => {
                       await signOut(auth);
