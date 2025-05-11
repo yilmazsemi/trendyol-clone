@@ -1,0 +1,62 @@
+.edit-product-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.edit-product-container h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
+}
+
+.edit-product-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-product-form label {
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #444;
+}
+
+.edit-product-form input,
+.edit-product-form textarea {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.edit-product-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.edit-product-form button {
+  padding: 12px;
+  background-color: #f27a1a;
+  color: white;
+  border: none;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-product-form button:hover {
+  background-color: #d6670c;
+}
+
+.edit-message {
+  margin-top: 16px;
+  font-size: 14px;
+  text-align: center;
+}

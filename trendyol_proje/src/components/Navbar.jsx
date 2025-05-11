@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { auth, db } from '../services/firebase';
-import { signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import './Navbar.css';
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { auth, db } from "../services/firebase";
+import { signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import "./Navbar.css";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -17,7 +17,7 @@ const Navbar = () => {
     const unsubscribe = auth.onAuthStateChanged(async (u) => {
       setUser(u);
       if (u) {
-        const ref = doc(db, 'users', u.uid);
+        const ref = doc(db, "users", u.uid);
         const snap = await getDoc(ref);
         if (snap.exists()) {
           const data = snap.data();
@@ -32,7 +32,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const updateCount = () => {
-      const stored = localStorage.getItem('cart');
+      const stored = localStorage.getItem("cart");
       if (stored) {
         const cart = JSON.parse(stored);
         const count = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -43,8 +43,8 @@ const Navbar = () => {
     };
 
     updateCount();
-    window.addEventListener('cartUpdated', updateCount);
-    return () => window.removeEventListener('cartUpdated', updateCount);
+    window.addEventListener("cartUpdated", updateCount);
+    return () => window.removeEventListener("cartUpdated", updateCount);
   }, []);
 
   useEffect(() => {
@@ -53,43 +53,54 @@ const Navbar = () => {
         setDropdownOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const avatarLetter = user?.email?.charAt(0).toUpperCase() || '?';
+  const avatarLetter = user?.email?.charAt(0).toUpperCase() || "?";
 
   return (
     <nav className="top-nav">
-      <div className="nav-left" onClick={() => navigate('/products')}>
+      <div className="nav-left" onClick={() => navigate("/products")}>
         TrendyolClone
       </div>
 
       <div className="nav-actions">
-        {user && (
-          <div className="cart-icon" onClick={() => navigate('/cart')}>
+        {user && userRole !== "seller" && (
+          <div className="cart-icon" onClick={() => navigate("/cart")}>
             🛒 <span className="cart-badge">{cartCount}</span>
           </div>
         )}
 
         <div className="nav-right dropdown" ref={dropdownRef}>
           <button
-            className={user ? 'dropdown-avatar' : 'dropdown-login'}
-            onClick={() => setDropdownOpen(prev => !prev)}
+            className={user ? "dropdown-avatar" : "dropdown-login"}
+            onClick={() => setDropdownOpen((prev) => !prev)}
           >
-            {user ? avatarLetter : 'Giriş Yap'}
+            {user ? avatarLetter : "Giriş Yap"}
           </button>
 
           {dropdownOpen && (
             <div className="dropdown-menu">
               {user ? (
                 <>
-                  <button onClick={() => navigate('/profile')}>Profile</button>
-                  <button onClick={() => navigate('/orders')}>Orders</button>
-                  <button onClick={() => navigate('/cart')}>Cart</button>
+                  <button onClick={() => navigate("/profile")}>Profile</button>
 
-                  {userRole === 'admin' && (
-                    <button onClick={() => navigate('/admin/dashboard')}>
+                  {userRole === "seller" ? (
+                    <button onClick={() => navigate("/seller/dashboard")}>
+                      Satıcı Paneli
+                    </button>
+                  ) : (
+                    <>
+                      <button onClick={() => navigate("/orders")}>
+                        Orders
+                      </button>
+                      <button onClick={() => navigate("/cart")}>Cart</button>
+                    </>
+                  )}
+
+                  {userRole === "admin" && (
+                    <button onClick={() => navigate("/admin/dashboard")}>
                       Admin Panel
                     </button>
                   )}
@@ -97,7 +108,7 @@ const Navbar = () => {
                   <button
                     onClick={async () => {
                       await signOut(auth);
-                      navigate('/login');
+                      navigate("/login");
                     }}
                   >
                     Logout
@@ -105,8 +116,8 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <button onClick={() => navigate('/login')}>Login</button>
-                  <button onClick={() => navigate('/signup')}>Sign Up</button>
+                  <button onClick={() => navigate("/login")}>Login</button>
+                  <button onClick={() => navigate("/signup")}>Sign Up</button>
                 </>
               )}
             </div>
