@@ -17,13 +17,17 @@ import AdminDashboard from "./components/AdminDashboard";
 import Products from "./components/Products";
 import AddProduct from "./components/AddProduct";
 import Orders from "./components/Orders";
-import EditProduct from './components/EditProduct';
+import SellerSales from "./components/SellerSales";
+import EditProduct from "./components/EditProduct";
+import SellerQuestions from "./components/SellerQuestions";
 
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
+        <Route path="/seller/questions" element={<SellerQuestions />} />
+        <Route path="/seller/sales" element={<SellerSales />} />
         <Route path="/seller/add-product" element={<AddProduct />} />
         <Route path="/seller/edit-product/:id" element={<EditProduct />} />
         <Route path="/" element={<Navigate to="/products" />} />

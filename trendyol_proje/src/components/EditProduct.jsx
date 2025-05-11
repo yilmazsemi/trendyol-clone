@@ -10,6 +10,7 @@ const EditProduct = () => {
 
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
+  const [discountPercentage, setDiscountPercentage] = useState('');
   const [category, setCategory] = useState('');
   const [image, setImage] = useState('');
   const [description, setDescription] = useState('');
@@ -25,6 +26,7 @@ const EditProduct = () => {
           const data = docSnap.data();
           setTitle(data.title || '');
           setPrice(data.price || '');
+          setDiscountPercentage(data.discountPercentage || '');
           setCategory(data.category || '');
           setImage(data.image || '');
           setDescription(data.description || '');
@@ -48,6 +50,7 @@ const EditProduct = () => {
       await updateDoc(ref, {
         title,
         price: parseFloat(price),
+        discountPercentage: discountPercentage ? parseFloat(discountPercentage) : null,
         category,
         image,
         description
@@ -70,6 +73,14 @@ const EditProduct = () => {
 
         <label>Fiyat</label>
         <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+
+        <label>İndirim (%)</label>
+        <input
+          type="number"
+          value={discountPercentage}
+          onChange={(e) => setDiscountPercentage(e.target.value)}
+          placeholder="Varsa, örn: 15"
+        />
 
         <label>Kategori</label>
         <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} />

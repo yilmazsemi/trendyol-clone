@@ -157,3 +157,16 @@
   width: 100%;
   height: 100%;
 }
+
+.original-price {
+  font-size: 14px;
+  color: #999;
+  text-decoration: line-through;
+  margin-bottom: 2px;
+}
+
+.discounted-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #e60023;
+}

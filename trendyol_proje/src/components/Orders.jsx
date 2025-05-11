@@ -1,67 +1,63 @@
 import React, { useEffect, useState } from 'react';
-import { auth, db } from '../services/firebase';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { db, auth } from '../services/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import './Orders.css';
 
 const Orders = () => {
-  const user = auth.currentUser;
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrders = async () => {
-      if (!user) {
-        console.log('User not logged in');
-        return;
-      }
-  
       try {
         const q = query(
           collection(db, 'orders'),
-          where('userId', '==', user.uid),
-          orderBy('createdAt', 'desc')
+          where('userId', '==', auth.currentUser.uid)
         );
-  
-        const snapshot = await getDocs(q);
-        console.log('Fetched order count:', snapshot.size); // 🔍
-  
-        const orderList = snapshot.docs.map(doc => ({
+        const querySnapshot = await getDocs(q);
+        const list = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-  
-        console.log('Orders:', orderList); // 🔍
-        setOrders(orderList);
+        setOrders(list);
       } catch (error) {
-        console.error('Error loading orders:', error);
+        console.error('Siparişler alınamadı:', error);
+      } finally {
+        setLoading(false);
       }
     };
-  
-    fetchOrders();
-  }, [user]);
-  
 
-  if (!orders.length) {
-    return <div className="orders-container"><h2>You have no orders yet.</h2></div>;
-  }
+    fetchOrders();
+  }, []);
 
   return (
     <div className="orders-container">
-      <h2>My Orders</h2>
-      {orders.map((order) => (
-        <div key={order.id} className="order-card">
-          <p><strong>Order Date:</strong> {new Date(order.createdAt.toDate()).toLocaleString()}</p>
-          <p><strong>Address:</strong> {order.address}</p>
-          <div className="order-items">
-            {order.items.map((item, index) => (
-              <div key={index} className="order-item">
-                <span>{item.title} x {item.quantity}</span>
-                <span>{(item.price * item.quantity).toFixed(2)}₺</span>
-              </div>
-            ))}
+      <h2>Siparişlerim</h2>
+
+      {loading ? (
+        <p>Yükleniyor...</p>
+      ) : orders.length === 0 ? (
+        <p>Hiç siparişiniz bulunmuyor.</p>
+      ) : (
+        orders.map(order => (
+          <div key={order.id} className="order-card">
+            <p className="order-date">
+              {order.createdAt?.toDate().toLocaleString() || 'Tarih yok'}
+            </p>
+            <ul className="order-items">
+              {order.items?.map((item, index) => (
+                <li key={index}>
+                  <strong>{item.title}</strong> — {item.quantity} adet —
+                  {' '}
+                  {item.price && item.quantity
+                    ? (item.price * item.quantity).toFixed(2) + '₺'
+                    : 'Fiyat yok'}
+                </li>
+              ))}
+            </ul>
           </div>
-          <p className="order-total">Total: {order.total.toFixed(2)}₺</p>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 };

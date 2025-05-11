@@ -1,81 +1,152 @@
 .product-detail-container {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 24px;
-    display: flex;
-    flex-direction: row;
-    gap: 40px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  .product-detail-image {
-    width: 380px;
-    height: auto;
-    border-radius: 12px;
-    object-fit: contain;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-  }
-  
-  .product-detail-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .product-detail-info h2 {
-    font-size: 24px;
-    margin-bottom: 12px;
-    color: #333;
-  }
-  
-  .product-detail-info .price {
-    font-size: 20px;
-    font-weight: bold;
-    color: #f27a1a;
-    margin-bottom: 8px;
-  }
-  
-  .product-detail-info .category {
-    font-size: 14px;
-    color: #777;
-    margin-bottom: 20px;
-  }
-  
-  .product-detail-info .description {
-    font-size: 15px;
-    color: #444;
-    line-height: 1.5;
-    margin-bottom: 24px;
-  }
-  
-  .detail-controls {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-  }
-  
-  .detail-controls button {
-    padding: 8px 14px;
-    font-size: 16px;
-    border: none;
-    border-radius: 6px;
-    background-color: #f27a1a;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .detail-controls button:hover {
-    background-color: #d6670c;
-  }
-  
-  .detail-controls span {
-    font-size: 16px;
-    font-weight: bold;
-    min-width: 24px;
-    text-align: center;
-  }
-  
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: 32px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.detail-image {
+  width: 320px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #eee;
+}
+
+.detail-info {
+  flex: 1;
+}
+
+.detail-info h2 {
+  font-size: 24px;
+  color: #222;
+  margin-bottom: 12px;
+}
+
+.price {
+  font-size: 20px;
+  color: #f27a1a;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.detail-info p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.quantity-controls button {
+  background-color: #f27a1a;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.quantity-controls button:hover {
+  background-color: #d6670c;
+}
+
+.quantity-controls span {
+  font-size: 16px;
+  min-width: 24px;
+  text-align: center;
+  display: inline-block;
+}
+
+.add-button {
+  background-color: #f27a1a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-button:hover {
+  background-color: #d6670c;
+}
+
+.question-box {
+  margin-top: 24px;
+}
+
+.question-box textarea {
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  resize: vertical;
+}
+
+.question-box button {
+  padding: 8px 14px;
+  background-color: #f27a1a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.question-box button:hover {
+  background-color: #d6670c;
+}
+
+.message {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #28a745;
+}
+
+.question-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.question-list li {
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+
+.original-price {
+  font-size: 14px;
+  color: #999;
+  text-decoration: line-through;
+  margin-bottom: 4px;
+}
+
+.discounted-price {
+  font-size: 18px;
+  color: #e60023;
+  font-weight: bold;
+  margin-bottom: 10px;
+}

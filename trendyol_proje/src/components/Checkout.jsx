@@ -1,93 +1,75 @@
 import React, { useEffect, useState } from 'react';
-import { auth, db } from '../services/firebase';
-import { doc, setDoc, collection, getDoc } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { db, auth } from '../services/firebase';
+import { collection, addDoc, Timestamp, doc, getDoc } from 'firebase/firestore';
 import './Checkout.css';
 
 const Checkout = () => {
-  const navigate = useNavigate();
-  const user = auth.currentUser;
-
-  const [cart, setCart] = useState([]);
-  const [address, setAddress] = useState('');
+  const [cartItems, setCartItems] = useState([]);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     const stored = localStorage.getItem('cart');
-    if (stored) setCart(JSON.parse(stored));
+    if (stored) {
+      setCartItems(JSON.parse(stored));
+    }
+  }, []);
 
-    const fetchAddress = async () => {
-      if (user) {
-        const userRef = doc(db, 'users', user.uid);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          const data = userSnap.data();
-          setAddress(data.address || '');
+  const handleCheckout = async () => {
+    try {
+      const updatedItems = [];
+
+      for (const item of cartItems) {
+        const productRef = doc(db, 'products', item.id);
+        const productSnap = await getDoc(productRef);
+
+        if (productSnap.exists()) {
+          const productData = productSnap.data();
+          updatedItems.push({
+            productId: item.id,
+            title: productData.title,
+            price: productData.price,
+            quantity: item.quantity,
+            sellerId: productData.sellerId
+          });
         }
       }
-    };
 
-    fetchAddress();
-  }, [user]);
-
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-  const handleOrder = async () => {
-    if (!address.trim()) {
-      setMessage('⚠️ Lütfen bir adres girin.');
-      return;
-    }
-
-    try {
-      const orderRef = doc(collection(db, 'orders'));
-      await setDoc(orderRef, {
-        userId: user.uid,
-        items: cart,
-        total,
-        address,
-        createdAt: new Date()
+      await addDoc(collection(db, 'orders'), {
+        userId: auth.currentUser.uid,
+        items: updatedItems,
+        createdAt: Timestamp.now()
       });
 
       localStorage.removeItem('cart');
       window.dispatchEvent(new Event('cartUpdated'));
-      setMessage('✅ Siparişiniz alındı!');
-      setTimeout(() => {
-        navigate('/products');
-      }, 2500);
+      setCartItems([]);
+      setMessage('✔️ Siparişiniz başarıyla oluşturuldu!');
     } catch (error) {
-      console.error('Order error:', error);
-      setMessage('❌ Sipariş oluşturulurken hata oluştu.');
+      console.error('Sipariş oluşturma hatası:', error);
+      setMessage('❌ Sipariş oluşturulamadı.');
     }
   };
-
-  if (!cart.length) {
-    return <div className="checkout-container"><h2>Sepetiniz boş.</h2></div>;
-  }
 
   return (
     <div className="checkout-container">
       <h2>Siparişi Tamamla</h2>
-      <div className="checkout-items">
-        {cart.map(item => (
-          <div key={item.id} className="checkout-item">
-            <span>{item.title} x {item.quantity}</span>
-            <span>{(item.price * item.quantity).toFixed(2)}₺</span>
-          </div>
-        ))}
-      </div>
+      {cartItems.length === 0 ? (
+        <p>Sepetiniz boş.</p>
+      ) : (
+        <>
+          <ul className="checkout-list">
+            {cartItems.map(item => (
+              <li key={item.id}>
+                {item.title} - {item.quantity} adet - {(item.price * item.quantity).toFixed(2)}₺
+              </li>
+            ))}
+          </ul>
 
-      <div className="checkout-summary">
-        <label>Teslimat Adresi</label>
-        <textarea
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          placeholder="Adres giriniz"
-        ></textarea>
+          <button onClick={handleCheckout}>Siparişi Onayla</button>
+        </>
+      )}
 
-        <p className="checkout-total">Toplam: {total.toFixed(2)}₺</p>
-        <button onClick={handleOrder}>Siparişi Onayla</button>
-        {message && <p className="checkout-message">{message}</p>}
-      </div>
+      {message && <p className="checkout-message">{message}</p>}
     </div>
   );
 };

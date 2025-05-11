@@ -1,0 +1,58 @@
+.seller-questions-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.seller-questions-container h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.question-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #f9f9f9;
+}
+
+.question-card p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.answer-box {
+  margin-top: 10px;
+}
+
+.answer-box textarea {
+  width: 100%;
+  height: 60px;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 8px;
+  resize: vertical;
+}
+
+.answer-box button {
+  padding: 8px 14px;
+  background-color: #f27a1a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.answer-box button:hover {
+  background-color: #d6670c;
+}

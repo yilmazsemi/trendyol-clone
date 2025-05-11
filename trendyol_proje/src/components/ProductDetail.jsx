@@ -1,92 +1,172 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db, auth } from '../services/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import {
+  doc,
+  getDoc,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  Timestamp
+} from 'firebase/firestore';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(0);
-  const [user, setUser] = useState(auth.currentUser);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(u => setUser(u));
-    return () => unsubscribe();
-  }, []);
+  const [quantity, setQuantity] = useState(1);
+  const [questionText, setQuestionText] = useState('');
+  const [questions, setQuestions] = useState([]);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const docRef = doc(db, 'products', id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setProduct({ id: docSnap.id, ...docSnap.data() });
+        const ref = doc(db, 'products', id);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+          setProduct({ id: snap.id, ...snap.data() });
         }
       } catch (error) {
-        console.error('Ürün yüklenemedi:', error);
+        console.error('Ürün detayları alınamadı:', error);
       }
     };
 
-    const loadCartQuantity = () => {
-      const stored = localStorage.getItem('cart');
-      if (stored) {
-        const cart = JSON.parse(stored);
-        const found = cart.find(item => item.id === id);
-        setQuantity(found ? found.quantity : 0);
+    const fetchQuestions = async () => {
+      try {
+        const q = query(
+          collection(db, 'product_questions'),
+          where('productId', '==', id),
+          orderBy('createdAt', 'desc')
+        );
+        const snapshot = await getDocs(q);
+        const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setQuestions(list);
+      } catch (error) {
+        console.error('Sorular alınamadı:', error);
       }
     };
 
     fetchProduct();
-    loadCartQuantity();
-    window.addEventListener('cartUpdated', loadCartQuantity);
-    return () => window.removeEventListener('cartUpdated', loadCartQuantity);
+    fetchQuestions();
   }, [id]);
 
-  const updateCart = (change) => {
-    const stored = localStorage.getItem('cart');
-    let cart = stored ? JSON.parse(stored) : [];
-    const index = cart.findIndex(item => item.id === product.id);
-
-    if (index !== -1) {
-      cart[index].quantity += change;
-      if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
-      }
-    } else if (change > 0) {
-      cart.push({
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        image: product.image,
-        quantity: 1
-      });
+  const addToCart = () => {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existing = cart.find(item => item.id === product.id);
+    if (existing) {
+      existing.quantity += quantity;
+    } else {
+      cart.push({ id: product.id, title: product.title, price: product.price, quantity });
     }
-
     localStorage.setItem('cart', JSON.stringify(cart));
     window.dispatchEvent(new Event('cartUpdated'));
   };
 
-  if (!product) {
-    return <div className="product-detail-container">Yükleniyor...</div>;
-  }
+  const handleAskQuestion = async () => {
+    if (!auth.currentUser) {
+      setMessage('Lütfen giriş yapın.');
+      return;
+    }
+
+    if (!questionText.trim()) {
+      setMessage('Soru boş olamaz.');
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, 'product_questions'), {
+        productId: id,
+        userId: auth.currentUser.uid,
+        question: questionText.trim(),
+        createdAt: Timestamp.now(),
+        answer: null
+      });
+
+      setQuestionText('');
+      setMessage('✔️ Sorunuz gönderildi.');
+
+      const q = query(
+        collection(db, 'product_questions'),
+        where('productId', '==', id),
+        orderBy('createdAt', 'desc')
+      );
+      const snapshot = await getDocs(q);
+      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setQuestions(list);
+    } catch (error) {
+      console.error('Soru gönderilemedi:', error);
+      setMessage('❌ Soru gönderilemedi.');
+    }
+  };
+
+  if (!product) return <p>Ürün bulunamadı.</p>;
+
+  const discountedPrice = product.discountPercentage
+    ? (product.price * (1 - product.discountPercentage / 100)).toFixed(2)
+    : null;
 
   return (
     <div className="product-detail-container">
-      <img src={product.image} alt={product.title} className="product-detail-image" />
-      <div className="product-detail-info">
-        <h2>{product.title}</h2>
-        <p className="price">{product.price.toFixed(2)}₺</p>
-        <p className="category">{product.category}</p>
-        <p className="description">{product.description}</p>
+      <img src={product.image} alt={product.title} className="detail-image" />
 
-        {user && (
-          <div className="detail-controls">
-            <button onClick={() => updateCart(-1)}>-</button>
-            <span>{quantity}</span>
-            <button onClick={() => updateCart(1)}>+</button>
+      <div className="detail-info">
+        <h2>{product.title}</h2>
+
+        {discountedPrice ? (
+          <>
+            <p className="original-price">{product.price.toFixed(2)}₺</p>
+            <p className="discounted-price">{discountedPrice}₺</p>
+          </>
+        ) : (
+          <p className="price">{product.price.toFixed(2)}₺</p>
+        )}
+
+        <p>{product.description}</p>
+
+        <div className="quantity-controls">
+          <button onClick={() => setQuantity(q => Math.max(1, q - 1))}>-</button>
+          <span>{quantity}</span>
+          <button onClick={() => setQuantity(q => q + 1)}>+</button>
+        </div>
+
+        {auth.currentUser && (
+          <button className="add-button" onClick={addToCart}>
+            Sepete Ekle
+          </button>
+        )}
+
+        <hr />
+
+        <h3>Ürün Hakkında Sorular</h3>
+
+        {auth.currentUser && (
+          <div className="question-box">
+            <textarea
+              placeholder="Bir soru sorun..."
+              value={questionText}
+              onChange={(e) => setQuestionText(e.target.value)}
+            />
+            <button onClick={handleAskQuestion}>Sor</button>
+            {message && <p className="message">{message}</p>}
           </div>
         )}
+
+        <ul className="question-list">
+          {questions.map(q => (
+            <li key={q.id}>
+              <strong>Soru:</strong> {q.question} <br />
+              {q.answer ? (
+                <span><strong>Cevap:</strong> {q.answer}</span>
+              ) : (
+                <em>Henüz yanıtlanmadı.</em>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

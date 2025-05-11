@@ -54,9 +54,17 @@ const SellerDashboard = () => {
     <div className="seller-dashboard-container">
       <div className="seller-dashboard-header">
         <h2>Ürünlerim</h2>
-        <button onClick={() => navigate('/seller/add-product')}>
-          + Ürün Ekle
-        </button>
+        <div className="seller-buttons">
+          <button onClick={() => navigate('/seller/add-product')}>
+            + Ürün Ekle
+          </button>
+          <button onClick={() => navigate('/seller/sales')}>
+            Satış Paneli
+          </button>
+          <button onClick={() => navigate('/seller/questions')}>
+            Müşteri Soruları
+          </button>
+        </div>
       </div>
 
       <div className="product-grid">

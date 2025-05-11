@@ -1,0 +1,64 @@
+.seller-sales-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.seller-sales-container h2 {
+  font-size: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #333;
+}
+
+.sales-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background-color: #f27a1a;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 45%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.top-products {
+  padding: 0 10px;
+}
+
+.top-products h3 {
+  margin-bottom: 12px;
+  color: #444;
+}
+
+.top-products ul {
+  list-style: none;
+  padding: 0;
+}
+
+.top-products li {
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
