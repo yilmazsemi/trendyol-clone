@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../services/firebase';
 import { useNavigate } from 'react-router-dom';
-import { auth, db } from '../services/firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import './SellerLogin.css';
+import './Login.css';
 
 const SellerLogin = () => {
   const [email, setEmail] = useState('');
@@ -13,56 +12,35 @@ const SellerLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setMessage('');
-
     try {
-      // Firebase Auth Login
       await signInWithEmailAndPassword(auth, email, password);
-
-      // Firestore: Check seller status
-      const q = query(
-        collection(db, 'seller_applications'),
-        where('email', '==', email),
-        where('status', '==', 'approved')
-      );
-
-      const snapshot = await getDocs(q);
-
-      if (snapshot.empty) {
-        setMessage('❌ Satıcı başvurunuz henüz onaylanmadı.');
-        return;
-      }
-
-      // If approved → Navigate to seller dashboard
-      navigate('/seller/dashboard');
+      setMessage('✔️ Giriş başarılı!');
+      setTimeout(() => navigate('/seller/dashboard'), 1500);
     } catch (error) {
       console.error('Seller login error:', error.message);
-      setMessage('❌ Giriş yapılamadı. Lütfen bilgilerinizi kontrol edin.');
+      setMessage('❌ Giriş başarısız.');
     }
   };
 
   return (
-    <div className="seller-login-container">
+    <div className="login-container">
       <h2>Satıcı Girişi</h2>
-      <form onSubmit={handleLogin} className="seller-login-form">
+      <form onSubmit={handleLogin}>
         <label>Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
 
         <label>Şifre</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
 
         <button type="submit">Giriş Yap</button>
 
-        {message && <p className="seller-login-message">{message}</p>}
+        {message && <p className="login-message">{message}</p>}
       </form>
+
+      <p className="switch-link">
+        Kullanıcı olarak mı giriş yapacaksınız?{' '}
+        <button onClick={() => navigate('/login')}>Kullanıcı Girişi</button>
+      </p>
     </div>
   );
 };

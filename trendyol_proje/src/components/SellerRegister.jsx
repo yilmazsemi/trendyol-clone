@@ -1,112 +1,51 @@
 import React, { useState } from 'react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../services/firebase';
-import {
-  createUserWithEmailAndPassword
-} from 'firebase/auth';
-import {
-  collection,
-  addDoc,
-  doc,
-  setDoc,
-  Timestamp
-} from 'firebase/firestore';
-import './SellerRegister.css';
+import { doc, setDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
+import './Signup.css';
 
 const SellerRegister = () => {
-  const [companyName, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [description, setDescription] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-
-    if (!companyName || !email || !password || !phone || !description) {
-      setMessage('❌ Lütfen tüm alanları doldurun.');
-      return;
-    }
-
     try {
-      // 1. Create user in Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const uid = userCredential.user.uid;
-
-      // 2. Save to seller_applications
-      await addDoc(collection(db, 'seller_applications'), {
-        companyName,
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, 'users', result.user.uid), {
         email,
-        phone,
-        description,
-        status: 'pending',
-        createdAt: Timestamp.now()
+        role: 'seller'
       });
-
-      // 3. Set user role as 'seller'
-      await setDoc(
-        doc(db, 'users', uid),
-        {
-          email,
-          role: 'seller'
-        },
-        { merge: true }
-      );
-
-      setMessage('✔️ Başvurunuz alındı ve hesabınız oluşturuldu!');
-      setCompanyName('');
-      setEmail('');
-      setPassword('');
-      setPhone('');
-      setDescription('');
+      setMessage('✔️ Satıcı kaydı başarılı!');
+      setTimeout(() => navigate('/seller/dashboard'), 1500);
     } catch (error) {
-      console.error('Satıcı kayıt hatası:', error);
-      setMessage('❌ Hesap oluşturulamadı: ' + error.message);
+      console.error('Seller signup error:', error.message);
+      setMessage('❌ Kayıt başarısız.');
     }
   };
 
   return (
-    <div className="seller-register-container">
-      <h2>Satıcı Başvurusu</h2>
-      <form onSubmit={handleSubmit} className="seller-form">
-        <label>Şirket Adı</label>
-        <input
-          type="text"
-          value={companyName}
-          onChange={(e) => setCompanyName(e.target.value)}
-        />
-
+    <div className="signup-container">
+      <h2>Satıcı Kaydı</h2>
+      <form onSubmit={handleSignup}>
         <label>Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
 
         <label>Şifre</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
 
-        <label>Telefon</label>
-        <input
-          type="text"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
+        <button type="submit">Kayıt Ol</button>
 
-        <label>Şirket Açıklaması</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
-
-        <button type="submit">Başvur</button>
-
-        {message && <p className="seller-message">{message}</p>}
+        {message && <p className="signup-message">{message}</p>}
       </form>
+
+      <p className="switch-link">
+        Kullanıcı olarak mı kayıt olmak istiyorsunuz?{' '}
+        <button onClick={() => navigate('/signup')}>Kullanıcı Kaydı</button>
+      </p>
     </div>
   );
 };

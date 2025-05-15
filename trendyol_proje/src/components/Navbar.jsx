@@ -105,6 +105,18 @@ const Navbar = () => {
                     </button>
                   )}
 
+                  {userRole === "admin" && (
+                    <button onClick={() => navigate("/admin/sellers")}>
+                      Satıcı Yönetimi
+                    </button>
+                  )}
+
+                  {userRole === "admin" && (
+                    <button onClick={() => navigate("/admin/reports")}>
+                      Şikayetleri İncele
+                    </button>
+                  )}
+
                   <button
                     onClick={async () => {
                       await signOut(auth);

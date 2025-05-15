@@ -20,12 +20,16 @@ import Orders from "./components/Orders";
 import SellerSales from "./components/SellerSales";
 import EditProduct from "./components/EditProduct";
 import SellerQuestions from "./components/SellerQuestions";
+import AdminSellers from "./components/AdminSellers"
+import AdminReports from './components/AdminReports';
 
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
+        <Route path="/admin/reports" element={<AdminReports />} />
+        <Route path="/admin/sellers" element={<AdminSellers />} />
         <Route path="/seller/questions" element={<SellerQuestions />} />
         <Route path="/seller/sales" element={<SellerSales />} />
         <Route path="/seller/add-product" element={<AddProduct />} />

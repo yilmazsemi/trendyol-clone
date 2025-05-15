@@ -1,64 +1,74 @@
-/* src/components/SellerRegister.css */
+.signup-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-.seller-register-container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 24px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  .seller-register-container h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .seller-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .seller-form label {
-    margin-top: 12px;
-    font-size: 14px;
-    color: #444;
-  }
-  
-  .seller-form input,
-  .seller-form textarea {
-    padding: 10px;
-    font-size: 14px;
-    margin-top: 4px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-  
-  .seller-form textarea {
-    min-height: 80px;
-    resize: none;
-  }
-  
-  .seller-form button {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f27a1a;
-    color: white;
-    border: none;
-    font-size: 15px;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-  .seller-form button:hover {
-    background-color: #d6670c;
-  }
-  
-  .seller-message {
-    margin-top: 16px;
-    font-size: 14px;
-    color: green;
-  }
-  
+.signup-container h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #222;
+}
+
+.signup-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.signup-container label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.signup-container input {
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.signup-container button {
+  background-color: #f27a1a;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.signup-container button:hover {
+  background-color: #d6670c;
+}
+
+.signup-message {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #28a745;
+  text-align: center;
+}
+
+.switch-link {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.switch-link button {
+  background: none;
+  color: #f27a1a;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+}
+
+.switch-link button:hover {
+  text-decoration: underline;
+}

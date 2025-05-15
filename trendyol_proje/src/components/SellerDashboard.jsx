@@ -6,13 +6,15 @@ import {
   query,
   where,
   deleteDoc,
-  doc
+  doc,
+  getDoc
 } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import './SellerDashboard.css';
 
 const SellerDashboard = () => {
   const [products, setProducts] = useState([]);
+  const [blocked, setBlocked] = useState(false);
   const navigate = useNavigate();
   const user = auth.currentUser;
 
@@ -35,7 +37,25 @@ const SellerDashboard = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
+    if (!user) return;
+
+    const checkStatusAndFetch = async () => {
+      try {
+        const ref = doc(db, 'users', user.uid);
+        const snap = await getDoc(ref);
+        const data = snap.data();
+        if (data?.status === 'suspended') {
+          setBlocked(true);
+          window.alert("Hesabınız askıya alınmıştır")
+        } else {
+          fetchProducts();
+        }
+      } catch (error) {
+        console.error('Kullanıcı durumu alınamadı:', error);
+      }
+    };
+
+    checkStatusAndFetch();
   }, [user]);
 
   const handleDelete = async (id) => {
@@ -49,6 +69,10 @@ const SellerDashboard = () => {
       console.error('Silme hatası:', error);
     }
   };
+
+  if (blocked) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="seller-dashboard-container">

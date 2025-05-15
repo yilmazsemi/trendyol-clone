@@ -22,6 +22,11 @@ const ProductDetail = () => {
   const [questions, setQuestions] = useState([]);
   const [message, setMessage] = useState('');
 
+  // Report product state
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [reportMessage, setReportMessage] = useState('');
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -103,6 +108,27 @@ const ProductDetail = () => {
     }
   };
 
+  const handleReportProduct = async () => {
+    if (!auth.currentUser || !reportReason.trim()) return;
+
+    try {
+      await addDoc(collection(db, 'product_reports'), {
+        productId: product.id,
+        userId: auth.currentUser.uid,
+        reason: reportReason.trim(),
+        createdAt: Timestamp.now(),
+        status: 'pending'
+      });
+
+      setShowReportForm(false);
+      setReportReason('');
+      setReportMessage('✔️ Şikayetiniz başarıyla gönderildi.');
+    } catch (error) {
+      console.error('Şikayet gönderilemedi:', error);
+      setReportMessage('❌ Şikayet gönderilemedi.');
+    }
+  };
+
   if (!product) return <p>Ürün bulunamadı.</p>;
 
   const discountedPrice = product.discountPercentage
@@ -134,9 +160,30 @@ const ProductDetail = () => {
         </div>
 
         {auth.currentUser && (
-          <button className="add-button" onClick={addToCart}>
-            Sepete Ekle
-          </button>
+          <>
+            <button className="add-button" onClick={addToCart}>
+              Sepete Ekle
+            </button>
+
+            <button
+              className="report-button"
+              onClick={() => setShowReportForm(prev => !prev)}
+            >
+              Ürünü Şikayet Et
+            </button>
+          </>
+        )}
+
+        {showReportForm && (
+          <div className="report-box">
+            <textarea
+              placeholder="Şikayet nedeninizi yazın..."
+              value={reportReason}
+              onChange={(e) => setReportReason(e.target.value)}
+            />
+            <button onClick={handleReportProduct}>Gönder</button>
+            {reportMessage && <p className="message">{reportMessage}</p>}
+          </div>
         )}
 
         <hr />
