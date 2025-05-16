@@ -60,16 +60,23 @@ const ProductDetail = () => {
   }, [id]);
 
   const addToCart = () => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const existing = cart.find(item => item.id === product.id);
-    if (existing) {
-      existing.quantity += quantity;
-    } else {
-      cart.push({ id: product.id, title: product.title, price: product.price, quantity });
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    window.dispatchEvent(new Event('cartUpdated'));
-  };
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const existing = cart.find(item => item.id === product.id);
+  if (existing) {
+    existing.quantity += quantity;
+  } else {
+    cart.push({
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      quantity,
+      image: product.image 
+    });
+  }
+  localStorage.setItem('cart', JSON.stringify(cart));
+  window.dispatchEvent(new Event('cartUpdated'));
+};
+
 
   const handleAskQuestion = async () => {
     if (!auth.currentUser) {

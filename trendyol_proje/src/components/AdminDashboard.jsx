@@ -30,8 +30,19 @@ const AdminDashboard = () => {
 
   const approveSeller = async (id) => {
     try {
-      const ref = doc(db, 'seller_applications', id);
-      await updateDoc(ref, { status: 'approved' });
+      // Update application status
+      const appRef = doc(db, 'seller_applications', id);
+      await updateDoc(appRef, { status: 'approved' });
+
+      // Find the application to get userId
+      const application = applications.find(app => app.id === id);
+      if (application) {
+        // Update user document status
+        const userRef = doc(db, 'users', application.userId);
+        await updateDoc(userRef, { status: 'approved' });
+      }
+
+      // Update local state
       const updated = applications.map(app =>
         app.id === id ? { ...app, status: 'approved' } : app
       );
@@ -61,10 +72,10 @@ const AdminDashboard = () => {
           <tbody>
             {applications.map(app => (
               <tr key={app.id}>
-                <td>{app.companyName}</td>
+                <td>{app.companyName || '-'}</td>
                 <td>{app.email}</td>
-                <td>{app.phone}</td>
-                <td>{app.description}</td>
+                <td>{app.phone || '-'}</td>
+                <td>{app.description || '-'}</td>
                 <td>{app.status}</td>
                 <td>
                   {app.status === 'pending' ? (

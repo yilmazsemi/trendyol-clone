@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './Cart.css';
 import { useNavigate } from 'react-router-dom';
+import { db } from '../services/firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
@@ -26,6 +28,8 @@ const Cart = () => {
     }
   };
 
+  
+
   const getTotal = () =>
     cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
@@ -38,7 +42,7 @@ const Cart = () => {
       <h2>Sepetim</h2>
       {cart.map(item => (
         <div className="cart-item" key={item.id}>
-          <img src={item.image} alt={item.title} />
+          <img src={item.image} alt={item.title} className="cart-item-image" />
           <div className="cart-info">
             <h3>{item.title}</h3>
             <p>{item.price.toFixed(2)}₺ x {item.quantity}</p>

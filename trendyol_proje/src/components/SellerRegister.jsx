@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../services/firebase';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, collection, addDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 
@@ -15,12 +15,26 @@ const SellerRegister = () => {
     e.preventDefault();
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Create user document with pending status
       await setDoc(doc(db, 'users', result.user.uid), {
         email,
-        role: 'seller'
+        role: 'seller',
+        status: 'pending'  // Set status pending until approved
       });
-      setMessage('✔️ Satıcı kaydı başarılı!');
-      setTimeout(() => navigate('/seller/dashboard'), 1500);
+
+      // Create seller application document
+      await addDoc(collection(db, 'seller_applications'), {
+        userId: result.user.uid,
+        email,
+        companyName: '', // Add input fields later to get real data if needed
+        phone: '',
+        description: '',
+        status: 'pending'
+      });
+
+      setMessage('✔️ Satıcı kaydı başarılı! Onay bekleniyor.');
+      setTimeout(() => navigate('/seller/login'), 2000);  // Redirect to login, no direct dashboard access
     } catch (error) {
       console.error('Seller signup error:', error.message);
       setMessage('❌ Kayıt başarısız.');

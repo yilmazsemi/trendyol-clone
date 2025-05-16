@@ -44,9 +44,13 @@ const SellerDashboard = () => {
         const ref = doc(db, 'users', user.uid);
         const snap = await getDoc(ref);
         const data = snap.data();
-        if (data?.status === 'suspended') {
+        if (data?.status === 'suspended' || data?.status === 'pending') {
           setBlocked(true);
-          window.alert("Hesabınız askıya alınmıştır")
+          window.alert(
+            data.status === 'suspended'
+              ? "Hesabınız askıya alınmıştır"
+              : "Hesabınız henüz onaylanmamıştır"
+          );
         } else {
           fetchProducts();
         }
@@ -57,18 +61,6 @@ const SellerDashboard = () => {
 
     checkStatusAndFetch();
   }, [user]);
-
-  const handleDelete = async (id) => {
-    const confirm = window.confirm('Bu ürünü silmek istediğinize emin misiniz?');
-    if (!confirm) return;
-
-    try {
-      await deleteDoc(doc(db, 'products', id));
-      setProducts(products.filter(p => p.id !== id));
-    } catch (error) {
-      console.error('Silme hatası:', error);
-    }
-  };
 
   if (blocked) {
     return <Navigate to="/" replace />;
