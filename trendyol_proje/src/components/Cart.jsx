@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Cart.css';
 import { useNavigate } from 'react-router-dom';
-import { db } from '../services/firebase';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
