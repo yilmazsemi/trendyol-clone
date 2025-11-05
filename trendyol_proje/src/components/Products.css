@@ -172,3 +172,63 @@
 }
 
 
+/* 🔹 Ürün sayfası yapısı */
+.products-container {
+  display: flex;
+  gap: 24px;
+  padding: 40px 60px;
+  background-color: #fafafa;
+}
+
+/* 🔹 Sol panel */
+.filters {
+  flex: 0 0 240px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: fit-content;
+}
+
+.filters h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #222;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+
+/* 🔹 Sağdaki ürün grid */
+.product-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* 🔹 Input stilleri */
+.filters input,
+.filters select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.filters input:focus,
+.filters select:focus {
+  border-color: #f27a1a;
+  outline: none;
+  box-shadow: 0 0 3px rgba(242, 122, 26, 0.4);
+}
+
+.filters label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #333;
+}
